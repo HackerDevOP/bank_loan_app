@@ -5,6 +5,7 @@ import { Register } from './pages/register/register';
 import { LoanApplication } from './pages/loan-application/loan-application';
 import { ApplicationList } from './pages/application-list/application-list';
 import { NotFound } from './pages/not-found/not-found';
+import { routeGuardGuard } from './guards/route-guard-guard';
 
 export const routes: Routes = [
   {
@@ -26,11 +27,13 @@ export const routes: Routes = [
   },
   {
     path:'loan-application',
-    component: LoanApplication
+    component: LoanApplication,
+    canActivate:[routeGuardGuard]
   },
   {
     path:'application-list',
-    component: ApplicationList
+    component: ApplicationList,
+    canActivate:[routeGuardGuard]
   },
   {
     path:'**',
