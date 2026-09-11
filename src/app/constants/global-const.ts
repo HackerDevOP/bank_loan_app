@@ -7,6 +7,7 @@ export const API_EndPoints = {
   GET_APP: '/GetAllApplications',
   GET_APP_BY_CUSTID: '/GetMyApplications?customerId=',
   POST_APP: '/AddNewApplication',
+  REGISTER_USER:'/RegisterCustomer'
 };
 
 export const LOCAL_STORAGE_KEY = {
