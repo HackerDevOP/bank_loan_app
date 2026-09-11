@@ -1,1 +1,119 @@
-<p>login works!</p>
+<main class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 sm:p-10">
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Welcome Back</h1>
+        <p class="text-sm text-slate-500 mt-2">Log in to manage your loan application</p>
+      </div>
+
+      <form id="loginForm" class="space-y-5" onsubmit="handleLogin(event)">
+        <div>
+          <label
+            for="userName"
+            class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1"
+          >
+            Username
+          </label>
+          <input
+            id="userName"
+            [formField]="loginForm.userName"
+            type="text"
+            placeholder="Enter your username"
+            class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
+          />
+          @if (loginForm.userName().touched() && loginForm.userName().errors().length) {
+            <div class="flex items-center gap-1.5 mt-1.5 text-xs text-rose-600">
+              <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>{{ loginForm.userName().errors()[0]?.message }}</span>
+            </div>
+          }
+        </div>
+
+        <div>
+          <!-- <div class="flex items-center justify-between mb-1">
+              <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                Password
+              </label>
+              <a href="#" class="text-xs font-medium text-emerald-600 hover:text-emerald-500">
+                Forgot password?
+              </a>
+            </div> -->
+          <input
+            id="password"
+            [formField]="loginForm.password"
+            type="password"
+            placeholder="••••••••"
+            class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
+          />
+          @if (loginForm.password().touched() && loginForm.password().errors().length) {
+            <div class="flex items-center gap-1.5 mt-1.5 text-xs text-rose-600">
+              <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>{{ loginForm.password().errors()[0]?.message }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- <div class="flex items-center">
+            <input
+              id="remember-me"
+              type="checkbox"
+              class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+            />
+            <label for="remember-me" class="ml-2 block text-sm text-slate-600 cursor-pointer">
+              Remember me on this device
+            </label>
+          </div> -->
+
+        <button
+          type="button"
+          (click)="onLogin()"
+          [disabled]="loginForm().invalid()"
+          [class]="
+            loginForm().valid()
+              ? 'w-full mt-6! rounded-lg bg-emerald-600 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition'
+              : 'w-full rounded-lg bg-emerald-600 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:bg-emerald-600/50 disabled:text-white/80 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-emerald-600/50 disabled:pointer-events-none'
+          "
+        >
+          Sign In
+        </button>
+      </form>
+
+      <div
+        id="payloadOutput"
+        class="hidden mt-6 p-3 bg-slate-100 rounded-lg border border-slate-200"
+      >
+        <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+          Generated JSON Payload:
+        </p>
+        <pre id="jsonPreview" class="text-xs text-slate-800 font-mono overflow-x-auto"></pre>
+      </div>
+
+      <div class="mt-6 text-center">
+        <p class="text-xs text-slate-500">
+          Don't have an application yet?
+          <a
+            routerLink="/register"
+            class="font-semibold cursor-pointer text-emerald-600 hover:text-emerald-500"
+            >Apply now</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-slate-400 mt-6 flex items-center justify-center gap-1.5">
+      <span>🔒</span> Protected by 256-bit SSL bank-grade encryption
+    </p>
+  </div>
+</main>

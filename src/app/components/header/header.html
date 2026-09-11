@@ -1,1 +1,65 @@
-<p>header works!</p>
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <a routerLink="" routerLinkActive="" class="flex items-center space-x-2">
+      <span
+        class="h-8 w-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-lg"
+        ><img src="/android-chrome-512x512.png" alt="brand-image"></span
+      >
+      <span class="text-xl font-bold tracking-wide text-slate-900">Finance<span class=" text-emerald-600 tracking-tighter">Bank</span></span>
+    </a>
+    <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+      <a routerLink="/home" routerLinkActive="underline text-emerald-600" class="hover:text-emerald-400 transition ">Home</a>
+
+      @if (loggedUserData()) {
+        <a
+          routerLink="application-list"
+          routerLinkActive="underline text-emerald-600"
+          class="hover:text-emerald-600 transition"
+          >Application List</a
+        >
+        <a
+          routerLink="loan-application"
+          routerLinkActive="underline text-emerald-600"
+          class="hover:text-emerald-600 transition"
+          >New Application</a
+        >
+      }
+    </nav>
+    <div class="flex items-center space-x-4">
+      @if (loggedUserData()) {
+        <h1 class="font-light">
+          Hii, <span class="text-slate-600 font-bold italic">{{ loggedUserData()?.userName }}</span>
+        </h1>
+      }
+      @if (!loggedUserData()) {
+        <a
+          routerLink="login"
+          class="text-sm font-semibold text-slate-700 hover:text-green-600 hidden sm:block"
+          >Sign In</a
+        >
+      } @else {
+        <button type="button" (click)="logOut()" routerLinkActive="" class="cursor-pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.75"
+            stroke="currentColor"
+            class="w-5 h-5 text-slate-500 hover:text-rose-600 transition-colors"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+            />
+          </svg>
+        </button>
+      }
+      <a
+        routerLink="register"
+        class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition"
+        >Sign Up</a
+      >
+    </div>
+  </div>
+</header>
