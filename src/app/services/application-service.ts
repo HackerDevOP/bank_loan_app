@@ -74,9 +74,16 @@ export class ApplicationService {
     );
   });
 
+  newLoan = computed(() => {
+    return Number(
+      this.getLoanList.value()?.data.filter((item) => item.applicationStatus === 'New').length,
+    );
+  });
+
   pending = computed(() => {
     return this.activeLoans() - (this.underReview() + this.approved() + this.rejected());
   });
+
 
   loanSubmit(obj: ILoanApplication): Observable<LoanResponse> {
     return this.http.post<LoanResponse>(`${API_URL.BASE_URL}${API_EndPoints.POST_APP}`, obj);
