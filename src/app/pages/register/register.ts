@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class Register {
   protected registerModel = signal<IRegister>(InitialRegister);
-  protected route = inject(Router);
+  protected router = inject(Router);
   private registerService = inject(RegisterService);
   destroyRef = inject(DestroyRef);
 
@@ -25,9 +25,10 @@ export class Register {
         .register(this.registerForm().value())
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
-          next: (res) => {
-            alert(`'Register success', ${res.message}`);
-            this.route.navigateByUrl('login');
+          next: (res:{message:string}) => {
+            alert(`Register success: ${res.message}`);
+            this.router.navigateByUrl('login');
+            console.log(res.message)
           },
           error: (error: Response) => {
             alert(`"error": ${error.message}`);

@@ -18,6 +18,17 @@ export class Header {
   applicationService = inject(ApplicationService);
   destroyRef = inject(DestroyRef);
 
+
+  isMobileMenuOpen = signal(false);
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update((v) => !v);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+  }
+
   constructor() {
     this.loggedUserData.set(readLocalStorage(LOCAL_STORAGE_KEY.USER));
     this.applicationService.loginSubject$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
