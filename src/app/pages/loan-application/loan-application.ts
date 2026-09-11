@@ -1,6 +1,6 @@
 import { ApplicationService } from './../../services/application-service';
 import { IUser, Loan } from './../../models/MasterModels';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import {
   ILoanApplication,
   InitialApplication,
@@ -9,6 +9,9 @@ import {
 import { form, FormField } from '@angular/forms/signals';
 import { LoanResponse } from '../application-list/application-list';
 import { Router } from '@angular/router';
+import { readLocalStorage } from '../../helpers/local-storage-helper';
+import { LOCAL_STORAGE_KEY } from '../../constants/global-const';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [FormField],
@@ -18,15 +21,14 @@ import { Router } from '@angular/router';
 })
 export class LoanApplication {
   applicationService = inject(ApplicationService);
-
+  destroyRef = inject(DestroyRef)
   applicationModel = signal<ILoanApplication>(InitialApplication);
 
   applicationForm = form(this.applicationModel, LoanApplicationSchema);
   route = inject(Router);
 
   constructor() {
-    const storage = localStorage.getItem('user');
-    const parse: IUser = storage ? JSON.parse(storage) : null;
+    const parse: IUser = readLocalStorage(LOCAL_STORAGE_KEY.USER);
     const currentUserId = parse.userId ?? 0;
 
     this.applicationModel.update((prev) => ({
@@ -38,7 +40,9 @@ export class LoanApplication {
   onSubmit() {
     if (this.applicationForm().valid()) {
       const value = this.applicationForm().value();
-      this.applicationService.loanSubmit(value).subscribe({
+      this.applicationService.loanSubmit(value).pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
         next: (res: LoanResponse) => {
           alert(res.message);
           this.route.navigateByUrl('application-list');

@@ -49,7 +49,8 @@ export const InitialLogin: ILogin = {
 };
 
 export const LoginSchema = schema<ILogin>((root) => {
-  (required(root.userName, { message: 'Username is required' }), required(root.password, { message: 'Password is required' }));
+  (required(root.userName, { message: 'Username is required' }),
+    required(root.password, { message: 'Password is required' }));
 });
 
 export interface ILoanApplicationResponse {
@@ -65,24 +66,23 @@ export interface ILoanApplicationResponse {
 }
 
 export interface IIloanByEmpIdResponse {
-  applicantID: number
-  dateApplied: string
-  applicationStatus: string
-  fullName: string
-  email: string
-  employmentStatus: string
-  customerPhone: string
-  panCard: string
+  applicantID: number;
+  dateApplied: string;
+  applicationStatus: string;
+  fullName: string;
+  email: string;
+  employmentStatus: string;
+  customerPhone: string;
+  panCard: string;
 }
 
-
-export interface IloanByIdResponse{
-  applicantID: number
-  dateApplied: string
-  applicationStatus: string
-  employmentStatus: string
-  assignedToBankEmployee: string
-  panCard: string
+export interface IloanByIdResponse {
+  applicantID: number;
+  dateApplied: string;
+  applicationStatus: string;
+  employmentStatus: string;
+  assignedToBankEmployee: string;
+  panCard: string;
 }
 
 export const initialLoanAppRes: ILoanApplicationResponse = {
@@ -118,11 +118,6 @@ export interface ILoanApplication {
   dateApplied: string;
   Loans: Loan[];
   customerId: number;
-}
-
-const storage = localStorage.getItem('user');
-if (storage != null) {
-  var applicantId: IUser = JSON.parse(storage);
 }
 
 export const InitialApplication: ILoanApplication = {

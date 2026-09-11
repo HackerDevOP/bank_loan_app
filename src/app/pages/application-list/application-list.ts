@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import {
   ApplicationService,
   IEmpResponse,
@@ -16,6 +16,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LOCAL_STORAGE_KEY } from '../../constants/global-const';
+import { readLocalStorage } from '../../helpers/local-storage-helper';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface LoanResponse {
   message: string;
@@ -35,6 +38,7 @@ export class ApplicationList {
   protected loggedUser = signal<IUser | null>(null);
   protected loanById = signal<IloanByIdResponse[]>([]);
   protected loanByEmpId = signal<IIloanByEmpIdResponse[]>([]);
+  private destroyRef = inject(DestroyRef);
 
   protected data = computed(() => {
     return this.applicationService.getLoanList.value()?.data ?? [];
@@ -53,37 +57,47 @@ export class ApplicationList {
   });
 
   acceptApplication(pan: string, status: string) {
-    this.applicationService.changeStatus(pan, status).subscribe({
-      next: (res) => {
-        alert(res.message);
-        this.loanByEmpId();
-      },
-    });
+    this.applicationService
+      .changeStatus(pan, status)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          alert(res.message);
+          this.loanByEmpId();
+        },
+      });
   }
   rejectApplication(pan: string, status: string) {
-    this.applicationService.changeStatus(pan, status).subscribe({
-      next: (res) => {
-        alert(res.message);
-        this.loanByEmpId();
-      },
-    });
+    this.applicationService
+      .changeStatus(pan, status)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          alert(res.message);
+          this.loanByEmpId();
+        },
+      });
   }
 
   ngOnInit() {
-    const user = this.applicationService.getLocalStorage('user');
-    if (user != null) {
-      this.loggedUser.set(user);
-    }
-    this.applicationService.getLoanById(user.userId).subscribe({
-      next: (res: IResponseById) => {
-        this.loanById.set(res.data);
-      },
-    });
+    const user = readLocalStorage(LOCAL_STORAGE_KEY.USER);
+    this.loggedUser.set(user);
+    this.applicationService
+      .getLoanById(user.userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: IResponseById) => {
+          this.loanById.set(res.data);
+        },
+      });
 
-    this.applicationService.getLoanByEmp(user.userId).subscribe({
-      next: (res: IEmpResponse) => {
-        this.loanByEmpId.set(res.data);
-      },
-    });
+    this.applicationService
+      .getLoanByEmp(user.userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: IEmpResponse) => {
+          this.loanByEmpId.set(res.data);
+        },
+      });
   }
 }

@@ -1,14 +1,18 @@
-function readLocalStorage(key: string) {
-  var local = localStorage.getItem(key);
-  if (local == null) return null;
-  return JSON.parse(key);
+export function readLocalStorage(key: string) {
+  try {
+    const local = localStorage.getItem(key);
+    return local ? (JSON.parse(local)) : null;
+  } catch (error) {
+    console.error(`Error reading key ${key} from local storage`, error);
+    return null;
+  }
 }
 
-function setLocalStorage(key: string, value: object) {
+export function setLocalStorage(key: string, value: object) {
   var parse = JSON.stringify(value);
   localStorage.setItem(key, parse);
 }
 
-function clearLocalStorage(key: string) {
+export function clearLocalStorage(key: string) {
   localStorage.removeItem(key);
 }

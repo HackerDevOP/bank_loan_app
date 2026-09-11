@@ -10,6 +10,7 @@ import {
 import { Response } from './register-service';
 import { Observable, Subject } from 'rxjs';
 import { LoanResponse } from '../pages/application-list/application-list';
+import { API_EndPoints, API_URL } from '../constants/global-const';
 
 export interface IEmpResponse {
   message: string;
@@ -32,45 +33,25 @@ export interface IResponseById {
 export class ApplicationService {
   private http = inject(HttpClient);
 
-  getLocalStorage(key: string) {
-    const local = localStorage.getItem(key);
-    if (local != null) {
-      return JSON.parse(local);
-    }
-  }
-  setLocalStorage(key: string, value: object) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-  removeLocalStorage(key: string) {
-    localStorage.removeItem(key);
-  }
-  clearLocalStorage() {
-    localStorage.clear();
-  }
+  getUserList = httpResource<Response>(() => `${API_URL.BASE_URL}${API_EndPoints.GET_USERS}`);
 
-  getUserList = httpResource<Response>(
-    () => 'https://projectapi.gerasim.in/api/BankLoan/GetAllUsers',
-  );
-
-  getLoanList = httpResource<LoanResponse>(
-    () => 'https://projectapi.gerasim.in/api/BankLoan/GetAllApplications',
-  );
+  getLoanList = httpResource<LoanResponse>(() => `${API_URL.BASE_URL}${API_EndPoints.GET_APP}`);
 
   getLoanById(userId: number): Observable<IResponseById> {
     return this.http.get<IResponseById>(
-      `https://projectapi.gerasim.in/api/BankLoan/GetMyApplications?customerId=${userId}`,
+      `${API_URL.BASE_URL}${API_EndPoints.GET_APP_BY_CUSTID}${userId}`,
     );
   }
 
   getLoanByEmp(empId: number): Observable<IEmpResponse> {
     return this.http.get<IEmpResponse>(
-      `https://projectapi.gerasim.in/api/BankLoan/GetApplicationAssigneedToMe?bankEmployeeId=${empId}`,
+      `${API_URL.BASE_URL}/GetApplicationAssigneedToMe?bankEmployeeId=${empId}`,
     );
   }
 
   changeStatus(panNo: string, status: string) {
     return this.http.get<IResponse>(
-      `https://projectapi.gerasim.in/api/BankLoan/CheckApplicationStatus?panNo=${panNo}&status=${status}`,
+      `${API_URL.BASE_URL}/CheckApplicationStatus?panNo=${panNo}&status=${status}`,
     );
   }
 
@@ -98,10 +79,7 @@ export class ApplicationService {
   });
 
   loanSubmit(obj: ILoanApplication): Observable<LoanResponse> {
-    return this.http.post<LoanResponse>(
-      'https://projectapi.gerasim.in/api/BankLoan/AddNewApplication',
-      obj,
-    );
+    return this.http.post<LoanResponse>(`${API_URL.BASE_URL}${API_EndPoints.POST_APP}`, obj);
   }
 
   loginSubject$: Subject<void> = new Subject<void>();
